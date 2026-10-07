@@ -12,7 +12,7 @@ import aiosqlite
 import httpx
 from dotenv import load_dotenv
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 from openai import AsyncOpenAI
 
 
@@ -428,3 +428,18 @@ async def receive_webhook(request: Request, background_tasks: BackgroundTasks) -
 @app.get("/healthz")
 async def healthz() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/privacy", response_class=HTMLResponse)
+async def privacy_policy() -> str:
+    return """<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><title>Политика конфиденциальности</title></head>
+<body>
+<h1>Политика конфиденциальности</h1>
+<p>Этот WhatsApp-бот обрабатывает входящие сообщения для подготовки автоматических ответов.</p>
+<p>Текст сообщений может временно сохраняться для поддержания контекста диалога и передаваться сервису OpenAI для создания ответа.</p>
+<p>Мы не продаём персональные данные и не используем их для рекламы. Данные удаляются по запросу владельца аккаунта.</p>
+<p>По вопросам обработки данных обратитесь к владельцу WhatsApp-аккаунта.</p>
+</body>
+</html>"""
